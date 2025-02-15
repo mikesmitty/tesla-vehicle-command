@@ -39,13 +39,21 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Get Image Tags
-        id: tags
+      - name: Get Image Version
+        id: version
         run: |
           VERSION=$(awk -F= '/APP_VERSION *=/ {print $2}' Dockerfile)
-          GIT_SHA=$(git rev-parse --short HEAD)
-          TAGS="$(echo ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:{$VERSION,$GIT_SHA,latest})"
-          echo "tags=$TAGS" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha
+            type=raw,value=${{ steps.version.outputs.version }}
+            type=raw,value=latest
 
       - name: Build and push Docker image
         id: push
@@ -53,7 +61,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.tags.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
