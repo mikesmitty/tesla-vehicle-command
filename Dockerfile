@@ -6,6 +6,7 @@ ENV APP_VERSION=v0.3.3
 WORKDIR /app
 
 RUN git clone --depth 1 --branch $APP_VERSION https://github.com/teslamotors/vehicle-command.git .
+
 RUN go mod download
 
 COPY . .
