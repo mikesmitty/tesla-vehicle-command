@@ -42,8 +42,9 @@ jobs:
       - name: Get Image Tags
         id: tags
         run: |
-          VERSION=$(awk -F= '/APP_VERSION *=/ {print $2}' Dockerfile)-$(date +%F)
-          TAGS=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:{$VERSION,latest}
+          VERSION=$(awk -F= '/APP_VERSION *=/ {print $2}' Dockerfile)
+          GIT_SHA=$(git rev-parse --short HEAD)
+          TAGS="$(echo ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:{$VERSION,$GIT_SHA,latest})"
           echo "tags=$TAGS" >> "$GITHUB_OUTPUT"
 
       - name: Build and push Docker image
