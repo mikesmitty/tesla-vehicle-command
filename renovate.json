@@ -2,9 +2,19 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>mikesmitty/renovate-config",
-    "customManagers:dockerfileVersions"
+    "customManagers:dockerfileVersions",
+    ":automergeBranch",
+    ":automergeMinor"
   ],
   "schedule": [
     "at any time"
+  ],
+  "packageRules": [
+    {
+      "matchDepNames": [
+        "teslamotors/vehicle-command"
+      ],
+      "ignoreTests": true
+    }
   ]
 }
