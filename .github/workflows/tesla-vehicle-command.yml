@@ -55,6 +55,7 @@ jobs:
           tags: |
             type=sha
             type=raw,value=${{ steps.version.outputs.version }}
+            type=raw,value=${{ steps.version.outputs.version }}.${{ github.run_number }}
             type=raw,value=latest
 
       - name: Build and push Docker image
