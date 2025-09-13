@@ -1,4 +1,4 @@
-FROM golang:1.25.0-bookworm AS build
+FROM golang:1.25.1-bookworm AS build
 
 # renovate: datasource=github-releases depName=teslamotors/vehicle-command
 ENV APP_VERSION=v0.4.0
